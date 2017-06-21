@@ -71,9 +71,10 @@ class App {
       const randomIdentity = this.identities[num];
 
       const randomX = random.integer(personSize, maxX);
-      const randomY = random.integer(personSize, maxY);
+      const randomY = random.integer(window.innerHeight * 0.75, maxY);
 
       const person = new Person(
+        i,
         randomX,
         randomY,
         personSize,
