@@ -48,7 +48,7 @@ class App {
         if (gate.getId() === gateId) { return; }
         if (gate.getPopularity() <= curGate.getPopularity()) { return; }
 
-        gate.toggleAvailability();
+        gate.setAvailableStatus(true);
 
         preferredGate = gate;
         newGateOpened = true;

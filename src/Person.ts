@@ -32,14 +32,14 @@ class Person extends GameObject {
     gate: Gate,
     app: App,
   ) {
-    super(x, y, w, h, random.integer(1, 3));
+    super(x, y, w, h, random.real(1, 2));
 
     this.app = app;
     this.id = id;
     this.identity = identity;
     this.assignedGate = gate;
     this.arrivedAtQueueSpot = false;
-    this.checkinTime = random.integer(1000, 10000);
+    this.checkinTime = random.integer(500, 5000);
     this.startTimeCheckin = null;
     this.hasCheckedIn = false;
     this.isFinished = false;
@@ -178,7 +178,7 @@ class Person extends GameObject {
   }
 
   private assignQueueSpot(): void {
-    console.log(`gate ${this.assignedGate.getId()} queue: ${this.assignedGate.getQueueNum()}`);
+    // console.log(`gate ${this.assignedGate.getId() + 1} queue: ${this.assignedGate.getQueueNum()}`);
 
     if (this.assignedGate.getQueueNum() >= 10) {
       if (!this.isInQueue) {

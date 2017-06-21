@@ -1,26 +1,24 @@
 // dependencies
 import GameObject from './GameObject';
+import Gate from './Gate';
 
 class AvailableLight extends GameObject {
-  private isAvailable: boolean;
+  private gate: Gate;
 
-  constructor(isAvailable: boolean, x, y) {
+  constructor(gate: Gate, x, y) {
     super(x, y, 100, 20, 0);
 
-    this.isAvailable = isAvailable;
+    this.gate = gate;
 
     this.createElement('available-light');
     this.draw();
   }
 
-  public toggleAvailability(): void {
-    this.isAvailable = !this.isAvailable;
-    this.draw();
-  }
-
-  private draw(): void {
-    if (this.isAvailable) {
+  public draw(): void {
+    if (this.gate.getIsAvailable()) {
       this.$htmlElement.addClass('available');
+    } else {
+      this.$htmlElement.removeClass('available');
     }
   }
 }

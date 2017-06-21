@@ -34,7 +34,7 @@ class Gate extends GameObject {
     this.isAvailable = available;
 
     this.availableLight = new AvailableLight(
-      this.isAvailable,
+      this,
       this.position.x,
       this.position.y + 60,
     );
@@ -62,15 +62,21 @@ class Gate extends GameObject {
   public decrementQueueNum(): void {
     this.queueNum -= 1;
     this.popularity += 1;
+
+    console.log(`gate: ${this.id + 1} queue: ${this.queueNum}`);
+
+    if (this.queueNum === 0) {
+      this.setAvailableStatus(false);
+    }
   }
 
   public getQueueNum(): number {
     return this.queueNum;
   }
 
-  public toggleAvailability(): void {
-    this.isAvailable = !this.isAvailable;
-    this.availableLight.toggleAvailability();
+  public setAvailableStatus(available: boolean): void {
+    this.isAvailable = available;
+    this.availableLight.draw();
   }
 
   public getIsAvailable(): boolean {
