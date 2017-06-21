@@ -25,26 +25,35 @@ class App {
     this.fetchIdentities();
 
     this.prevSpawnTime = Date.now();
-    this.diffTimeSpawn = 0;
+    this.diffTimeSpawn = 2000;
   }
 
   public getNewGateAssigned(gateId: number): Gate {
     const curGate = this.gates[gateId];
-    let preferredGate = this.gates[0];
+    let preferredGate = null;
+
+    this.gates.forEach(gate => {
+      if (gate.getId() === gateId) { return; }
+      if (!gate.getIsAvailable()) { return; }
+      if (gate.getPopularity() <= curGate.getPopularity()) { return; }
+
+      preferredGate = gate;
+    });
 
     let newGateOpened = false;
 
-    this.gates.forEach(gate => {
-      if (!newGateOpened &&
-        gate.getId() !== gateId &&
-        gate.getPopularity() > curGate.getPopularity()) {
-        gate.toggleAvailability();
-        preferredGate = gate;
+    if (preferredGate === null) {
+      this.gates.forEach(gate => {
+        if (newGateOpened) { return false; }
+        if (gate.getId() === gateId) { return; }
+        if (gate.getPopularity() <= curGate.getPopularity()) { return; }
 
-        console.log(`opening gate ${gate.getId()}`);
+        gate.toggleAvailability();
+
+        preferredGate = gate;
         newGateOpened = true;
-      }
-    });
+      });
+    }
 
     return preferredGate;
   }
@@ -65,7 +74,7 @@ class App {
   private start(): void {
     this.generateWall();
     this.generateGates();
-    this.generatePeople(5);
+    this.generatePeople(2);
   }
 
   private generateGates(): void {
@@ -98,7 +107,7 @@ class App {
       const randomIdentity = this.identities[num];
 
       const randomX = random.integer(personSize, maxX);
-      const randomY = window.innerHeight + random.integer(personSize, 100);
+      const randomY = window.innerHeight + random.integer(personSize, 250);
 
       const gate = this.chooseGateForPerson();
 
@@ -135,18 +144,27 @@ class App {
     const curTime = Date.now();
 
     if (curTime - this.prevSpawnTime > this.diffTimeSpawn) {
-      this.generatePeople(random.integer(2, 5));
+      this.generatePeople(random.integer(1, 3));
 
-      this.diffTimeSpawn = random.integer(1000, 5000);
+      this.diffTimeSpawn = random.integer(2000, 7000);
       this.prevSpawnTime = curTime;
     }
   }
 
   private update = (): void => {
-    this.people.forEach(person => person.update());
-    requestAnimationFrame(this.update);
+    for (let i = this.people.length - 1; i >= 0; i -= 1) {
+      const person = this.people[i];
+
+      if (person.isFinished) {
+        this.people.slice(i, 1);
+      } else {
+        person.update();
+      }
+    }
 
     this.checkSpawnNewPeople();
+
+    requestAnimationFrame(this.update);
   }
 }
 

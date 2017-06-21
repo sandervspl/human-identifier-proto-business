@@ -9,13 +9,18 @@ import QueueSpot from './QueueSpot';
 import App from './app';
 
 class Person extends GameObject {
+  private app: App;
   private id: number;
   private identity: IPersonIdentity;
   private $mouseOverElement: JQuery;
   private assignedGate: Gate;
   private assignedQueueSpot: QueueSpot;
   private arrivedAtQueueSpot: boolean;
-  private app: App;
+  private checkinTime: number;
+  private startTimeCheckin: number;
+  private hasCheckedIn: boolean;
+  public isFinished: boolean;
+  public isInQueue: boolean;
 
   constructor(
     id: number,
@@ -29,11 +34,16 @@ class Person extends GameObject {
   ) {
     super(x, y, w, h, random.integer(1, 3));
 
+    this.app = app;
     this.id = id;
     this.identity = identity;
     this.assignedGate = gate;
     this.arrivedAtQueueSpot = false;
-    this.app = app;
+    this.checkinTime = random.integer(1000, 10000);
+    this.startTimeCheckin = null;
+    this.hasCheckedIn = false;
+    this.isFinished = false;
+    this.isInQueue = false;
 
     this.createElement('person');
     this.createMouseOverElement();
@@ -43,19 +53,31 @@ class Person extends GameObject {
 
     this.assignedQueueSpot = this.assignedGate.getQueue()[0];
 
-    console.log(`I am assigned to gate ${this.assignedGate.getId()} queue ${this.assignedQueueSpot.getId()}`);
+    // console.log(`I am assigned to gate ${this.assignedGate.getId()} queue ${this.assignedQueueSpot.getId()}`);
   }
 
   public update(): void {
-    this.updatePosition();
-    this.checkIfArrived();
+    if (this.isFinished) { return; }
+
+    if (this.isInQueue) {
+      this.checkIfShuffle();
+    }
+
+    if (!this.arrivedAtQueueSpot) {
+      this.updatePosition();
+      this.checkIfArrived();
+    }
+
+    if (this.arrivedAtQueueSpot && !this.hasCheckedIn) {
+      this.tryCheckIn();
+    }
+
+    if (this.hasCheckedIn) {
+      this.walkThroughGate();
+    }
   }
 
   public updatePosition(): void {
-    if (this.arrivedAtQueueSpot) {
-      return;
-    }
-
     if (this.assignedQueueSpot.hasBeenTaken()) {
       this.assignQueueSpot();
     }
@@ -106,8 +128,18 @@ class Person extends GameObject {
 
     if (hasArrived) {
       // console.log(`person #${this.id} arrived`);
+
+      if (!this.isInQueue) {
+        this.assignedGate.incrementQueueNum();
+      }
+
       this.arrivedAtQueueSpot = true;
-      this.assignedQueueSpot.toggleTaken();
+      this.isInQueue = true;
+
+      this.setSpeed(2);
+
+      this.startTimeCheckin = Date.now();
+      this.assignedQueueSpot.setTaken();
     }
   }
 
@@ -146,13 +178,57 @@ class Person extends GameObject {
   }
 
   private assignQueueSpot(): void {
-    if (this.assignedGate.getPopularity() <= 0) {
-      this.assignNewGate();
+    console.log(`gate ${this.assignedGate.getId()} queue: ${this.assignedGate.getQueueNum()}`);
+
+    if (this.assignedGate.getQueueNum() >= 10) {
+      if (!this.isInQueue) {
+        this.assignNewGate();
+      }
     }
 
     this.assignedQueueSpot = this.assignedGate.getQueue().find(spot => !spot.hasBeenTaken());
 
-    console.log(`gate: ${this.assignedGate.getId()} queue: ${this.assignedQueueSpot.getId()}`);
+    // console.log(`gate: ${this.assignedGate.getId()} queue: ${this.assignedQueueSpot.getId()}`);
+  }
+
+  private tryCheckIn(): void {
+    if (this.assignedQueueSpot.getId() !== 0) { return; }
+
+    const curTime = Date.now();
+    const diff = curTime - this.startTimeCheckin;
+
+    if (diff > this.checkinTime) {
+      this.hasCheckedIn = true;
+
+      // make queue spot available
+      this.assignedQueueSpot.setNotTaken();
+
+      // clear up spot in queue
+      this.assignedGate.decrementQueueNum();
+    }
+  }
+
+  private walkThroughGate(): void {
+    this.updatePositionY(this.position.y -= this.getSpeed());
+
+    if (this.position.y < this.assignedQueueSpot.getMiddlePoint().y - 20) {
+      this.isFinished = true;
+      this.$htmlElement.remove();
+    }
+  }
+
+  private checkIfShuffle(): void {
+    const qid = this.assignedQueueSpot.getId();
+    const queue = this.assignedGate.getQueue();
+    const nextSpot: QueueSpot = queue[qid - 1];
+
+    // console.log(nextSpot);
+
+    if (nextSpot && !nextSpot.hasBeenTaken()) {
+      this.assignedQueueSpot.setNotTaken();
+      this.assignedQueueSpot = nextSpot;
+      this.arrivedAtQueueSpot = false;
+    }
   }
 }
 

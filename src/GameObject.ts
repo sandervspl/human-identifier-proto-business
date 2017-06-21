@@ -29,6 +29,10 @@ abstract class GameObject {
     return this.speed;
   }
 
+  public setSpeed(speed: number): void {
+    this.speed = speed;
+  }
+
   public updatePositionX(x: number): void {
     this.position.x = x;
     this.setPositionOfSprite(x, this.position.y);

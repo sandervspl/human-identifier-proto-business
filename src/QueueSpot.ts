@@ -33,14 +33,16 @@ class QueueSpot extends GameObject {
     return this.isTaken;
   }
 
-  public toggleTaken(): void {
-    this.isTaken = !this.isTaken;
+  public setNotTaken(): void {
+    this.isTaken = false;
+    // this.gate.decrementQueueNum();
+    this.draw();
+  }
 
-    if (this.isTaken) {
-      this.gate.incrementQueueNum();
-    } else {
-      this.gate.decrementQueueNum();
-    }
+  public setTaken(): void {
+    this.isTaken = true;
+    // this.gate.incrementQueueNum();
+    this.draw();
   }
 
   public getMiddlePoint(): IPoint2d {
@@ -48,6 +50,14 @@ class QueueSpot extends GameObject {
       x: this.position.x,
       y: this.position.y,
     };
+  }
+
+  private draw(): void {
+    // if (this.isTaken) {
+    //   this.$htmlElement.addClass('taken');
+    // } else {
+    //   this.$htmlElement.removeClass('taken');
+    // }
   }
 }
 
