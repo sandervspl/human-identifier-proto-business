@@ -89,7 +89,7 @@ class App {
     const maxX = window.innerWidth - personSize;
     const maxY = window.innerHeight - personSize;
 
-    for (let i = 0; i < 50; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       const num = random.integer(0, this.identities.length - 1);
       const randomIdentity = this.identities[num];
 

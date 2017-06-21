@@ -1,6 +1,7 @@
 // dependencies
 import $ from 'jquery';
 import randomColor from 'randomcolor';
+const random = require('random-js')();
 import IPersonIdentity from './interfaces/IPersonIdentity';
 import GameObject from './GameObject';
 import Gate from './Gate';
@@ -26,7 +27,7 @@ class Person extends GameObject {
     gate: Gate,
     app: App,
   ) {
-    super(x, y, w, h, 5);
+    super(x, y, w, h, random.integer(1, 3));
 
     this.id = id;
     this.identity = identity;
@@ -85,11 +86,11 @@ class Person extends GameObject {
     const diffX = Math.abs(this.position.x - queueX);
     const diffY = Math.abs(this.position.y - queueY);
 
-    if (diffX < 5) {
+    if (diffX < 2) {
       this.updatePositionX(Math.floor(queueX));
     }
 
-    if (diffY < 5) {
+    if (diffY < 2) {
       this.updatePositionY(Math.floor(queueY));
     }
   }
