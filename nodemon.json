@@ -1,0 +1,11 @@
+{
+	"ext": "js json env",
+	"ignore": [
+		"./src",
+		"./webpack",
+		"./node_modules"
+	],
+	"watch": [
+		"build"
+	]
+}

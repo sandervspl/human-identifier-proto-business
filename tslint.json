@@ -1,0 +1,51 @@
+{
+  "extends": ["tslint:recommended"],
+  "rules": {
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "instance-field",
+          "static-field",
+          "constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method"
+        ]
+      }
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "no-unused-expression": false,
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-operator",
+      "check-typecast"
+    ],
+    "prefer-const": [true, { "destructuring": "all" }],
+    "semicolon": true,
+    "newline-before-return": true,
+    "interface-name": true,
+    "arrow-return-shorthand": true,
+    "triple-equals": true,
+    "switch-default": true,
+    "no-var-keyword": true,
+    "adjacent-overload-signatures": true,
+    "member-access": true,
+    "only-arrow-functions": true,
+    "prefer-for-of": true,
+    "typedef": true,
+    "no-duplicate-super": true,
+    "no-duplicate-variable": true,
+    "quotemark": [true, "single"],
+    "no-console": false,
+    "no-var-requires": false,
+    "arrow-parens": false
+  }
+}
