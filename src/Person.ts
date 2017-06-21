@@ -20,8 +20,6 @@ class Person extends GameObject {
 
     this.createElement('person');
     this.draw();
-
-    console.log(this);
   }
 
   private draw(): void {
