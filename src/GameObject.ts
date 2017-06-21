@@ -15,13 +15,28 @@ abstract class GameObject {
     this.speed = speed;
   }
 
-  // public update(): void {}
-
   public updatePosition(): void {
+    this.position.x += this.speed;
+    this.position.y += this.speed;
+
     this.$htmlElement.css({
-      left: this.position.x + this.speed,
-      top: this.position.y + this.speed,
+      left: this.position.x,
+      top: this.position.y,
     });
+  }
+
+  public getSpeed(): number {
+    return this.speed;
+  }
+
+  public updatePositionX(x: number): void {
+    this.position.x = x;
+    this.setPositionOfSprite(x, this.position.y);
+  }
+
+  public updatePositionY(y: number): void {
+    this.position.y = y;
+    this.setPositionOfSprite(this.position.x, y);
   }
 
   public setPosition(x: number, y: number): void {

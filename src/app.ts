@@ -32,12 +32,14 @@ class App {
 
     // start app
     this.start();
+
+    this.update();
   }
 
   private start(): void {
-    this.generatePeople();
-    this.generateGates();
     this.generateWall();
+    this.generateGates();
+    this.generatePeople();
   }
 
   private generateGates(): void {
@@ -66,12 +68,14 @@ class App {
     const maxX = window.innerWidth - personSize;
     const maxY = window.innerHeight - personSize;
 
-    for (let i = 0; i < 50; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       const num = random.integer(0, this.identities.length - 1);
       const randomIdentity = this.identities[num];
 
       const randomX = random.integer(personSize, maxX);
       const randomY = random.integer(window.innerHeight * 0.75, maxY);
+
+      const gate = this.chooseGateForPerson();
 
       const person = new Person(
         i,
@@ -79,11 +83,31 @@ class App {
         randomY,
         personSize,
         personSize,
-        randomIdentity
+        randomIdentity,
+        gate,
       );
 
       this.people.push(person);
     }
+  }
+
+  private chooseGateForPerson(): Gate {
+    let preferredGate: Gate = this.gates[0];
+
+    this.gates.forEach(gate => {
+      if (preferredGate.getPopularity() < gate.getPopularity()) {
+        preferredGate = gate;
+      }
+    });
+
+    console.log(`gate: ${preferredGate}`);
+
+    return preferredGate;
+  }
+
+  private update = (): void => {
+    this.people.forEach(person => person.update());
+    requestAnimationFrame(this.update);
   }
 }
 

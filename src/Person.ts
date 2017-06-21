@@ -1,13 +1,18 @@
 // dependencies
 import $ from 'jquery';
 import randomColor from 'randomcolor';
-import GameObject from './GameObject';
 import IPersonIdentity from './interfaces/IPersonIdentity';
+import GameObject from './GameObject';
+import Gate from './Gate';
+import QueueSpot from './QueueSpot';
 
 class Person extends GameObject {
   private id: number;
   private identity: IPersonIdentity;
   private $mouseOverElement: JQuery;
+  private assignedGate: Gate;
+  private assignedQueueSpot: QueueSpot;
+  private arrivedAtQueueSpot: boolean;
 
   constructor(
     id: number,
@@ -15,19 +20,88 @@ class Person extends GameObject {
     y: number,
     w: number,
     h: number,
-    // tslint:disable-next-line
-    identity: IPersonIdentity
+    identity: IPersonIdentity,
+    gate: Gate,
   ) {
-    super(x, y, w, h, 5);
+    super(x, y, w, h, 3);
 
     this.id = id;
     this.identity = identity;
+    this.assignedGate = gate;
+    this.arrivedAtQueueSpot = false;
 
     this.createElement('person');
     this.createMouseOverElement();
     this.draw();
 
     this.addEventHandlers();
+
+    this.assignedQueueSpot = this.assignedGate.getQueue()[0];
+  }
+
+  public update(): void {
+    this.updatePosition();
+    this.checkIfArrived();
+  }
+
+  public updatePosition(): void {
+    if (this.arrivedAtQueueSpot) {
+      return;
+    }
+
+    if (this.assignedQueueSpot.hasBeenTaken()) {
+      this.assignQueueSpot();
+    }
+
+    const { x } = this.position;
+    const { y } = this.position;
+
+    const { x: queueX } = this.assignedQueueSpot.getMiddlePoint();
+    const { y: queueY } = this.assignedQueueSpot.getMiddlePoint();
+
+    if (x !== queueX) {
+      if (x < queueX) {
+        this.updatePositionX(this.position.x += this.getSpeed());
+      } else if (x > queueX) {
+        this.updatePositionX(this.position.x -= this.getSpeed());
+      }
+    }
+
+    if (y !== queueY) {
+      if (y < queueY) {
+        this.updatePositionY(this.position.y += this.getSpeed());
+      } else if (y > queueX) {
+        this.updatePositionY(this.position.y -= this.getSpeed());
+      }
+    }
+
+    // if they are too close then just set them on location
+    const diffX = Math.abs(this.position.x - queueX);
+    const diffY = Math.abs(this.position.y - queueY);
+
+    if (diffX < 5) {
+      this.updatePositionX(Math.floor(queueX));
+    }
+
+    if (diffY < 5) {
+      this.updatePositionY(Math.floor(queueY));
+    }
+  }
+
+  private checkIfArrived(): void {
+    const { x } = this.position;
+    const { y } = this.position;
+
+    const { x: queueX } = this.assignedQueueSpot.getMiddlePoint();
+    const { y: queueY } = this.assignedQueueSpot.getMiddlePoint();
+
+    const hasArrived = !this.arrivedAtQueueSpot && x === queueX && y === queueY;
+
+    if (hasArrived) {
+      console.log(`person #${this.id} arrived`);
+      this.arrivedAtQueueSpot = true;
+      this.assignedQueueSpot.toggleTaken();
+    }
   }
 
   private addEventHandlers(): void {
@@ -58,6 +132,12 @@ class Person extends GameObject {
 
   private draw(): void {
     this.$htmlElement.css('backgroundColor', randomColor());
+  }
+
+  private assignQueueSpot(): void {
+    this.assignedQueueSpot = this.assignedGate.getQueue().find(spot => !spot.hasBeenTaken());
+
+    console.log(`Person #${this.id} gate #${this.assignedGate.getId()} queue #${this.assignedQueueSpot.getId()}`);
   }
 }
 

@@ -44,6 +44,14 @@ class Gate extends GameObject {
     return this.id;
   }
 
+  public getPopularity(): number {
+    return this.popularity;
+  }
+
+  public getQueue(): QueueSpot[] {
+    return this.queue;
+  }
+
   private createQueueSpots(): void {
     for (let i = 0; i < 10; i += 1) {
       const x = this.position.x + this.size.width / 2;

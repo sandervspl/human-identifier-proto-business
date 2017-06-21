@@ -20,15 +20,27 @@ class QueueSpot extends GameObject {
 
     // position correction
     this.setPosition(
-      this.position.x - this.size.width / 2,
-      this.position.y + this.id * (this.size.height + 5)
+      Math.floor(this.position.x - this.size.width / 2),
+      Math.floor(this.position.y + this.id * (this.size.height + 5))
     );
+  }
+
+  public getId(): number {
+    return this.id;
+  }
+
+  public hasBeenTaken(): boolean {
+    return this.isTaken;
+  }
+
+  public toggleTaken(): void {
+    this.isTaken = !this.isTaken;
   }
 
   public getMiddlePoint(): IPoint2d {
     return {
-      x: this.position.x + this.size.width / 2,
-      y: this.position.y + this.size.height / 2,
+      x: this.position.x,
+      y: this.position.y,
     };
   }
 }
