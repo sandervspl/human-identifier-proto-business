@@ -7,16 +7,21 @@ abstract class GameObject {
   protected position: Point2d;
   protected size: Size2d;
   protected $htmlElement: JQuery;
+  private speed: number;
 
-  constructor(x: number, y: number, w: number, h: number) {
+  constructor(x: number, y: number, w: number, h: number, speed: number) {
     this.position = new Point2d(x, y);
     this.size = new Size2d(w, h);
+    this.speed = speed;
   }
 
   // public update(): void {}
 
   public updateLocation(): void {
-    this.$htmlElement.css({ top: this.position.x, left: this.position.y });
+    this.$htmlElement.css({
+      top: this.position.x + this.speed,
+      left: this.position.y + this.speed,
+    });
   }
 
   public setLocationOfSprite(x: number, y: number): void {

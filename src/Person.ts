@@ -1,13 +1,27 @@
 // dependencies
 import randomColor from 'randomcolor';
 import GameObject from './GameObject';
+import IPersonIdentity from './interfaces/IPersonIdentity';
 
 class Person extends GameObject {
-  constructor(x: number, y: number, w: number, h: number) {
-    super(x, y, w, h);
+  private identity: IPersonIdentity;
+
+  constructor(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    // tslint:disable-next-line
+    identity: IPersonIdentity
+  ) {
+    super(x, y, w, h, 5);
+
+    this.identity = identity;
 
     this.createElement('person');
     this.draw();
+
+    console.log(this);
   }
 
   private draw(): void {
