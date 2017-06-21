@@ -3,12 +3,6 @@
   padding 0
   box-sizing border-box
 
-.game-object
-  position fixed
-
-  &.person
-    border-radius 50%
-
 #loader
   display none
   justify-content center
@@ -20,3 +14,29 @@
 
   &.loading
     display flex
+
+.game-object
+  position fixed
+  background-size 100%
+  background-repeat no-repeat
+
+  &.person
+    border-radius 50%
+
+  &.wall-back
+    top calc(30% - 37px)
+    left calc(50% - 590px)
+    width 1180px
+    height 74px
+
+  &.wall-front
+    top calc(30% - 37px)
+    left calc(50% - 590px)
+    width 1180px
+    height 74px
+
+  &.wall-roof
+    top calc(30% - 166px)
+    left calc(50% - 590px)
+    width 1180px
+    height 140px

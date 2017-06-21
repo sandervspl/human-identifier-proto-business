@@ -14,13 +14,7 @@
         ]
       }
     ],
-    "trailing-comma": [
-      true,
-      {
-        "multiline": "always",
-        "singleline": "never"
-      }
-    ],
+    "trailing-comma": false,
     "no-unused-expression": false,
     "whitespace": [
       true,

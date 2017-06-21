@@ -17,15 +17,15 @@ abstract class GameObject {
 
   // public update(): void {}
 
-  public updateLocation(): void {
+  public updatePosition(): void {
     this.$htmlElement.css({
-      top: this.position.x + this.speed,
-      left: this.position.y + this.speed,
+      left: this.position.x + this.speed,
+      top: this.position.y + this.speed,
     });
   }
 
-  public setLocationOfSprite(x: number, y: number): void {
-    this.$htmlElement.css({ top: x, left: y });
+  public setPositionOfSprite(x: number, y: number): void {
+    this.$htmlElement.css({ left: x, top: y });
   }
 
   public setSizeOfSprite(w: number, h: number): void {
@@ -35,7 +35,7 @@ abstract class GameObject {
   protected createElement(className?: string): void {
     this.$htmlElement = $(`<div class="game-object ${className}"></div>`);
 
-    this.setLocationOfSprite(this.position.x, this.position.y);
+    this.setPositionOfSprite(this.position.x, this.position.y);
     this.setSizeOfSprite(this.size.width, this.size.height);
 
     $('body').append(this.$htmlElement);
