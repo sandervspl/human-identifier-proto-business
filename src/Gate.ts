@@ -1,5 +1,6 @@
 // dependencies
 import GameObject from './GameObject';
+import QueueSpot from './QueueSpot';
 
 // assets
 const gateImgs = [
@@ -14,6 +15,7 @@ class Gate extends GameObject {
   private id: number;
   private isAvailable: boolean;
   private popularity: number;
+  private queue: QueueSpot[] = [];
 
   constructor(id: number, available: boolean) {
     super(0, 0, 0, 0, 0);
@@ -25,6 +27,23 @@ class Gate extends GameObject {
     this.createElement('gate-sign');
     this.draw();
     this.setAttributesForSign();
+
+    this.createQueueSpots();
+  }
+
+  public getId(): number {
+    return this.id;
+  }
+
+  private createQueueSpots(): void {
+    for (let i = 0; i < 10; i += 1) {
+      const x = this.position.x + this.size.width / 2;
+      const y = this.position.y + 120;
+
+      const spot = new QueueSpot(i, x, y, this);
+
+      this.queue.push(spot);
+    }
   }
 
   private setAttributesForSign(): void {

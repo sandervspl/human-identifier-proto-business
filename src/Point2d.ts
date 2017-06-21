@@ -1,4 +1,7 @@
-class Point2d {
+// dependencies
+import IPoint2d from './interfaces/IPoint2d';
+
+class Point2d implements IPoint2d {
   public x: number;
   public y: number;
 
