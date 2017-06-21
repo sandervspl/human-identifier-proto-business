@@ -18,9 +18,14 @@ class App {
   private identities: IPersonIdentity[] = [];
   private people: Person[] = [];
   private gates: Gate[] = [];
+  private prevSpawnTime: number;
+  private diffTimeSpawn: number;
 
   constructor() {
     this.fetchIdentities();
+
+    this.prevSpawnTime = Date.now();
+    this.diffTimeSpawn = 0;
   }
 
   public getNewGateAssigned(gateId: number): Gate {
@@ -60,7 +65,7 @@ class App {
   private start(): void {
     this.generateWall();
     this.generateGates();
-    this.generatePeople();
+    this.generatePeople(5);
   }
 
   private generateGates(): void {
@@ -84,17 +89,16 @@ class App {
     $('body').append(wallRoof);
   }
 
-  private generatePeople(): void {
+  private generatePeople(amount: number): void {
     const personSize = 20;
     const maxX = window.innerWidth - personSize;
-    const maxY = window.innerHeight - personSize;
 
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < amount; i += 1) {
       const num = random.integer(0, this.identities.length - 1);
       const randomIdentity = this.identities[num];
 
       const randomX = random.integer(personSize, maxX);
-      const randomY = random.integer(window.innerHeight * 0.75, maxY);
+      const randomY = window.innerHeight + random.integer(personSize, 100);
 
       const gate = this.chooseGateForPerson();
 
@@ -117,7 +121,7 @@ class App {
     let preferredGate: Gate = this.gates[0];
 
     this.gates.forEach(gate => {
-      if (preferredGate.getPopularity() < gate.getPopularity()) {
+      if (gate.getIsAvailable() && preferredGate.getPopularity() < gate.getPopularity()) {
         preferredGate = gate;
       }
     });
@@ -127,22 +131,22 @@ class App {
     return preferredGate;
   }
 
+  private checkSpawnNewPeople(): void {
+    const curTime = Date.now();
+
+    if (curTime - this.prevSpawnTime > this.diffTimeSpawn) {
+      this.generatePeople(random.integer(2, 5));
+
+      this.diffTimeSpawn = random.integer(1000, 5000);
+      this.prevSpawnTime = curTime;
+    }
+  }
+
   private update = (): void => {
     this.people.forEach(person => person.update());
     requestAnimationFrame(this.update);
 
-    // let openNextGate = false;
-    //
-    // this.gates.forEach(gate => {
-    //   if (openNextGate) {
-    //     gate.toggleAvailability();
-    //     openNextGate = false;
-    //   }
-    //
-    //   if (gate.getQueueNum() >= 10) {
-    //     openNextGate = true;
-    //   }
-    // });
+    this.checkSpawnNewPeople();
   }
 }
 

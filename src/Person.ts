@@ -42,6 +42,8 @@ class Person extends GameObject {
     this.addEventHandlers();
 
     this.assignedQueueSpot = this.assignedGate.getQueue()[0];
+
+    console.log(`I am assigned to gate ${this.assignedGate.getId()} queue ${this.assignedQueueSpot.getId()}`);
   }
 
   public update(): void {
@@ -75,10 +77,8 @@ class Person extends GameObject {
     if (y !== queueY) {
       if (y < queueY) {
         this.updatePositionY(this.position.y += this.getSpeed());
-        console.log('y < queuey');
       } else if (y > queueY) {
         this.updatePositionY(this.position.y -= this.getSpeed());
-        console.log('y > queuey');
       }
     }
 
@@ -105,7 +105,7 @@ class Person extends GameObject {
     const hasArrived = !this.arrivedAtQueueSpot && x === queueX && y === queueY;
 
     if (hasArrived) {
-      console.log(`person #${this.id} arrived`);
+      // console.log(`person #${this.id} arrived`);
       this.arrivedAtQueueSpot = true;
       this.assignedQueueSpot.toggleTaken();
     }

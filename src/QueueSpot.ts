@@ -16,7 +16,7 @@ class QueueSpot extends GameObject {
     this.gate = gate;
 
     this.createElement('queue-spot');
-    this.$htmlElement.attr({'data-gate-id': this.gate.getId(), 'data-queue-id': this.id });
+    // this.$htmlElement.attr({'data-gate-id': this.gate.getId(), 'data-queue-id': this.id });
 
     // position correction
     this.setPosition(
