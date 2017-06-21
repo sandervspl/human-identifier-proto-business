@@ -5,6 +5,7 @@ import IPersonIdentity from './interfaces/IPersonIdentity';
 import GameObject from './GameObject';
 import Gate from './Gate';
 import QueueSpot from './QueueSpot';
+import App from './app';
 
 class Person extends GameObject {
   private id: number;
@@ -13,6 +14,7 @@ class Person extends GameObject {
   private assignedGate: Gate;
   private assignedQueueSpot: QueueSpot;
   private arrivedAtQueueSpot: boolean;
+  private app: App;
 
   constructor(
     id: number,
@@ -22,13 +24,15 @@ class Person extends GameObject {
     h: number,
     identity: IPersonIdentity,
     gate: Gate,
+    app: App,
   ) {
-    super(x, y, w, h, 3);
+    super(x, y, w, h, 5);
 
     this.id = id;
     this.identity = identity;
     this.assignedGate = gate;
     this.arrivedAtQueueSpot = false;
+    this.app = app;
 
     this.createElement('person');
     this.createMouseOverElement();
@@ -70,8 +74,10 @@ class Person extends GameObject {
     if (y !== queueY) {
       if (y < queueY) {
         this.updatePositionY(this.position.y += this.getSpeed());
-      } else if (y > queueX) {
+        console.log('y < queuey');
+      } else if (y > queueY) {
         this.updatePositionY(this.position.y -= this.getSpeed());
+        console.log('y > queuey');
       }
     }
 
@@ -134,10 +140,18 @@ class Person extends GameObject {
     this.$htmlElement.css('backgroundColor', randomColor());
   }
 
+  private assignNewGate(): void {
+    this.assignedGate = this.app.getNewGateAssigned(this.assignedGate.getId());
+  }
+
   private assignQueueSpot(): void {
+    if (this.assignedGate.getPopularity() <= 0) {
+      this.assignNewGate();
+    }
+
     this.assignedQueueSpot = this.assignedGate.getQueue().find(spot => !spot.hasBeenTaken());
 
-    console.log(`Person #${this.id} gate #${this.assignedGate.getId()} queue #${this.assignedQueueSpot.getId()}`);
+    console.log(`gate: ${this.assignedGate.getId()} queue: ${this.assignedQueueSpot.getId()}`);
   }
 }
 

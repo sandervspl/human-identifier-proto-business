@@ -17,13 +17,15 @@ class Gate extends GameObject {
   private isAvailable: boolean;
   private popularity: number;
   private queue: QueueSpot[] = [];
+  private queueNum: number;
   private availableLight: AvailableLight;
 
   constructor(id: number, available: boolean) {
     super(0, 0, 0, 0, 0);
 
     this.id = id;
-    this.popularity = 1;
+    this.popularity = 10;
+    this.queueNum = 0;
 
     this.createElement('gate-sign');
     this.draw();
@@ -50,6 +52,29 @@ class Gate extends GameObject {
 
   public getQueue(): QueueSpot[] {
     return this.queue;
+  }
+
+  public incrementQueueNum(): void {
+    this.queueNum += 1;
+    this.popularity -= 1;
+  }
+
+  public decrementQueueNum(): void {
+    this.queueNum -= 1;
+    this.popularity += 1;
+  }
+
+  public getQueueNum(): number {
+    return this.queueNum;
+  }
+
+  public toggleAvailability(): void {
+    this.isAvailable = !this.isAvailable;
+    this.availableLight.toggleAvailability();
+  }
+
+  public getIsAvailable(): boolean {
+    return this.isAvailable;
   }
 
   private createQueueSpots(): void {

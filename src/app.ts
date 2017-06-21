@@ -23,6 +23,27 @@ class App {
     this.fetchIdentities();
   }
 
+  public getNewGateAssigned(gateId: number): Gate {
+    const curGate = this.gates[gateId];
+    let preferredGate = this.gates[0];
+
+    let newGateOpened = false;
+
+    this.gates.forEach(gate => {
+      if (!newGateOpened &&
+        gate.getId() !== gateId &&
+        gate.getPopularity() > curGate.getPopularity()) {
+        gate.toggleAvailability();
+        preferredGate = gate;
+
+        console.log(`opening gate ${gate.getId()}`);
+        newGateOpened = true;
+      }
+    });
+
+    return preferredGate;
+  }
+
   private async fetchIdentities(): Promise<any> {
     // fetch identities from API
     this.identities = await IdentitiesFetcher.getInstance().fetchIdentities();
@@ -68,7 +89,7 @@ class App {
     const maxX = window.innerWidth - personSize;
     const maxY = window.innerHeight - personSize;
 
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < 50; i += 1) {
       const num = random.integer(0, this.identities.length - 1);
       const randomIdentity = this.identities[num];
 
@@ -85,6 +106,7 @@ class App {
         personSize,
         randomIdentity,
         gate,
+        this,
       );
 
       this.people.push(person);
@@ -100,7 +122,7 @@ class App {
       }
     });
 
-    console.log(`gate: ${preferredGate}`);
+    // console.log(`gate: ${preferredGate}`);
 
     return preferredGate;
   }
@@ -108,6 +130,19 @@ class App {
   private update = (): void => {
     this.people.forEach(person => person.update());
     requestAnimationFrame(this.update);
+
+    // let openNextGate = false;
+    //
+    // this.gates.forEach(gate => {
+    //   if (openNextGate) {
+    //     gate.toggleAvailability();
+    //     openNextGate = false;
+    //   }
+    //
+    //   if (gate.getQueueNum() >= 10) {
+    //     openNextGate = true;
+    //   }
+    // });
   }
 }
 

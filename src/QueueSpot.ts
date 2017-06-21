@@ -35,6 +35,12 @@ class QueueSpot extends GameObject {
 
   public toggleTaken(): void {
     this.isTaken = !this.isTaken;
+
+    if (this.isTaken) {
+      this.gate.incrementQueueNum();
+    } else {
+      this.gate.decrementQueueNum();
+    }
   }
 
   public getMiddlePoint(): IPoint2d {

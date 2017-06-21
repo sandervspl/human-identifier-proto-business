@@ -13,6 +13,11 @@ class AvailableLight extends GameObject {
     this.draw();
   }
 
+  public toggleAvailability(): void {
+    this.isAvailable = !this.isAvailable;
+    this.draw();
+  }
+
   private draw(): void {
     if (this.isAvailable) {
       this.$htmlElement.addClass('available');
