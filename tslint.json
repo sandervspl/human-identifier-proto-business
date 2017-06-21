@@ -46,6 +46,7 @@
     "quotemark": [true, "single"],
     "no-console": false,
     "no-var-requires": false,
-    "arrow-parens": false
+    "arrow-parens": false,
+    "ordered-imports": false
   }
 }

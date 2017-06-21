@@ -1,6 +1,15 @@
+// dependencies
+// import $ from 'jquery';
+import Person from './Person';
+
+// style
+import './style/style.styl';
+
 class App {
   constructor() {
-    console.log('app has started!');
+    // create test person
+    const person = new Person(50, 50, 20, 20);
+    console.log(person);
   }
 }
 
