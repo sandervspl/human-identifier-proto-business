@@ -2,7 +2,7 @@
 import $ from 'jquery';
 import Person from './Person';
 import IdentitiesFetcher from './IdentitiesFetcher';
-// import Gate from './Gate';
+import Gate from './Gate';
 const random = require('random-js')();
 
 // style
@@ -17,7 +17,7 @@ const gatesRoofImg = require('./assets/images/gates-roof.png');
 class App {
   private identities: IPersonIdentity[] = [];
   private people: Person[] = [];
-  // private gates: Gate[] = [];
+  private gates: Gate[] = [];
 
   constructor() {
     this.fetchIdentities();
@@ -36,16 +36,16 @@ class App {
 
   private start(): void {
     this.generatePeople();
-    // this.generateGates();
+    this.generateGates();
     this.generateWall();
   }
 
-  // private generateGates(): void {
-  //   for (let i = 0; i < 5; i += 1) {
-  //     const gate = new Gate(i, i === 0, 0 + i * 50, window.innerHeight / 2);
-  //     this.gates.push(gate);
-  //   }
-  // }
+  private generateGates(): void {
+    for (let i = 0; i < 5; i += 1) {
+      const gate = new Gate(i, i === 0);
+      this.gates.push(gate);
+    }
+  }
 
   private generateWall(): void {
     const wallBack = $('<div class="game-object wall-back"></div>');

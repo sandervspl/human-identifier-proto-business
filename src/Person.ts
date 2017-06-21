@@ -37,10 +37,12 @@ class Person extends GameObject {
 
   private handleMouseEnter = (): void => {
     $('body').append(this.$mouseOverElement);
+    this.$htmlElement.addClass('selected');
   }
 
   private handleMouseLeave = (): void => {
     $(`[data-person-id=${this.id}]`).remove();
+    this.$htmlElement.removeClass('selected');
   }
 
   private createMouseOverElement(): void {

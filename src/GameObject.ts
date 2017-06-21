@@ -24,12 +24,16 @@ abstract class GameObject {
     });
   }
 
-  public setPositionOfSprite(x: number, y: number): void {
-    this.$htmlElement.css({ left: x, top: y });
+  public setPosition(x: number, y: number): void {
+    this.position.x = x;
+    this.position.y = y;
+    this.setPositionOfSprite(x, y);
   }
 
-  public setSizeOfSprite(w: number, h: number): void {
-    this.$htmlElement.css({ width: w, height: h });
+  public setSize(w: number, h: number): void {
+    this.size.width = w;
+    this.size.height = h;
+    this.setSizeOfSprite(w, h);
   }
 
   protected createElement(className?: string): void {
@@ -39,6 +43,14 @@ abstract class GameObject {
     this.setSizeOfSprite(this.size.width, this.size.height);
 
     $('body').append(this.$htmlElement);
+  }
+
+  private setPositionOfSprite(x: number, y: number): void {
+    this.$htmlElement.css({ left: x, top: y });
+  }
+
+  private setSizeOfSprite(w: number, h: number): void {
+    this.$htmlElement.css({ width: w, height: h });
   }
 }
 
