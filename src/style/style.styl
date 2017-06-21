@@ -31,12 +31,14 @@
     left calc(50% - 521.5px)
     width 1043px
     height 61px
+    z-index 1
 
   &.wall-front
     top calc(30% - 31px)
     left calc(50% - 522px)
     width 1044px
     height 62px
+    z-index 3
 
   &.wall-roof
     top calc(30% - 146px)
@@ -48,5 +50,13 @@
     z-index 1
 
   &.queue-spot
-    z-index 2
     background-color rgba(0, 0, 0, 0.11)
+
+  &.available-light
+    //width 100px
+    //height 20px
+    background-color red
+    z-index 2
+
+    &.available
+      background-color green
