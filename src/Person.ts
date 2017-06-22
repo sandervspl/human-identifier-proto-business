@@ -7,6 +7,7 @@ import GameObject from './GameObject';
 import Gate from './Gate';
 import QueueSpot from './QueueSpot';
 import App from './app';
+// import PersonPopup from './PersonPopup';
 
 class Person extends GameObject {
   private app: App;
@@ -19,6 +20,7 @@ class Person extends GameObject {
   private checkinTime: number;
   private startTimeCheckin: number;
   private hasCheckedIn: boolean;
+  // private popup: PersonPopup;
   public isFinished: boolean;
   public isInQueue: boolean;
 
@@ -80,6 +82,11 @@ class Person extends GameObject {
   public updatePosition(): void {
     if (this.assignedQueueSpot.hasBeenTaken()) {
       this.assignQueueSpot();
+    }
+
+    if (!this.assignedGate.getIsAvailable()) {
+      console.log(`Person: ${this.id} - while walking my gate closed. I need new gate.`);
+      this.assignNewGate();
     }
 
     const { x } = this.position;
@@ -159,14 +166,7 @@ class Person extends GameObject {
   }
 
   private createMouseOverElement(): void {
-    this.$mouseOverElement = $(`<div class="person-mouseover" data-person-id=${this.id}></div>`);
-
-    const $list = $('<ul></ul>');
-
-    const $name = $(`<li> ${this.identity.firstName} ${this.identity.lastName} </li>`);
-    $list.append($name);
-
-    this.$mouseOverElement.append($list);
+    // this.popup = new PersonPopup();
   }
 
   private draw(): void {
@@ -181,7 +181,9 @@ class Person extends GameObject {
     // console.log(`gate ${this.assignedGate.getId() + 1} queue: ${this.assignedGate.getQueueNum()}`);
 
     if (this.assignedGate.getQueueNum() >= 10) {
+      console.log(`gate ${this.assignedGate.getId()} has queue longer than 10`);
       if (!this.isInQueue) {
+        console.log(`Person ${this.id} needs a new gate`);
         this.assignNewGate();
       }
     }

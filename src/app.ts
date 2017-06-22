@@ -55,6 +55,10 @@ class App {
       });
     }
 
+    if (preferredGate === null) {
+      preferredGate = this.gates[0];
+    }
+
     return preferredGate;
   }
 

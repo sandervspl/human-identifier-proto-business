@@ -40,6 +40,10 @@ class Gate extends GameObject {
     );
 
     this.createQueueSpots();
+
+    if (this.id === 1) {
+      this.setAvailableStatus(true);
+    }
   }
 
   public getId(): number {
@@ -63,10 +67,13 @@ class Gate extends GameObject {
     this.queueNum -= 1;
     this.popularity += 1;
 
-    console.log(`gate: ${this.id + 1} queue: ${this.queueNum}`);
+    // console.log(`gate: ${this.id + 1} queue: ${this.queueNum}`);
 
     if (this.queueNum === 0) {
-      this.setAvailableStatus(false);
+      // always leave at least one gate open
+      if (this.id !== 0) {
+        this.setAvailableStatus(false);
+      }
     }
   }
 
