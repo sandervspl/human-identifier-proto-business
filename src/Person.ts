@@ -21,6 +21,8 @@ class Person extends GameObject {
   public popup: PersonPopup;
   public isFinished: boolean;
   public isInQueue: boolean;
+  public startedWaiting: number;
+  public waitedTime: number = 0;
 
   constructor(
     id: number,
@@ -143,6 +145,7 @@ class Person extends GameObject {
       // console.log(`person #${this.id} arrived`);
 
       if (!this.isInQueue) {
+        this.startedWaiting = Date.now();
         this.assignedGate.incrementQueueNum();
       }
 
@@ -202,6 +205,12 @@ class Person extends GameObject {
 
   private tryCheckIn(): void {
     if (this.assignedQueueSpot.getId() !== 0) { return; }
+
+    if (this.waitedTime === 0) {
+      this.waitedTime = Date.now() - this.startedWaiting;
+      this.assignedGate.avgWaitTimes.push(this.waitedTime);
+      console.log(`waited time: ${this.waitedTime}`);
+    }
 
     const curTime = Date.now();
     const diff = curTime - this.startTimeCheckin;

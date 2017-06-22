@@ -29,7 +29,7 @@ class GatePopup {
     const $container = $(`<div class="person-mouseover__data"></div>`);
     const $list = $('<ul></ul>');
 
-    const $totalCheckin = this.createListElement('Total checkin', this.gate.totalPeopleCheckedIn.toString());
+    const $totalCheckin = this.createListElement('Total check-ins', this.gate.totalPeopleCheckedIn.toString());
     $list.append($totalCheckin);
 
     const $avgPplPerMin = this.createListElement(
@@ -43,6 +43,12 @@ class GatePopup {
       `${this.gate.avgCheckinTimeAmount.toString()} m`
     );
     $list.append($avgCheckinTime);
+
+    const $avgWaitTime = this.createListElement(
+      'Average time in queue',
+      `${this.gate.avgWaitTimeAmount.toString()} m`
+    );
+    $list.append($avgWaitTime);
 
     $container.append($list);
     this.$htmlElement.append($container);

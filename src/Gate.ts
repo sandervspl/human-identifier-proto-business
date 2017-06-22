@@ -27,7 +27,8 @@ class Gate extends GameObject {
   public avgPeoplePerMinute: number = 0;
   public avgCheckinTimes: number[] = [];
   public avgCheckinTimeAmount: number = 0;
-  public avgWaitTime: number = 0;
+  public avgWaitTimes: number[] = [];
+  public avgWaitTimeAmount: number = 0;
   public totalPeopleCheckedIn: number = 0;
 
   constructor(id: number, available: boolean) {
@@ -177,6 +178,14 @@ class Gate extends GameObject {
     } else {
       const sum = this.avgCheckinTimes.reduce((previous, current) => current += previous);
       this.avgCheckinTimeAmount = Math.round((sum / this.avgCheckinTimes.length) / 1000);
+    }
+
+    // avg wait time
+    if (this.avgWaitTimes.length === 0) {
+      this.avgWaitTimeAmount = 0;
+    } else {
+      const sum = this.avgWaitTimes.reduce((previous, current) => current += previous);
+      this.avgWaitTimeAmount = Math.round((sum / this.avgWaitTimes.length) / 1000);
     }
 
     this.popup.show();
