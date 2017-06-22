@@ -2,35 +2,31 @@
 import $ from 'jquery';
 import Point2d from './Point2d';
 import Size2d from './Size2d';
+import IPoint2d from './interfaces/IPoint2d';
 
 abstract class GameObject {
-  protected position: Point2d;
   protected size: Size2d;
   protected $htmlElement: JQuery;
-  private speed: number;
+  public position: Point2d;
+  public speed: IPoint2d;
 
   constructor(x: number, y: number, w: number, h: number, speed: number) {
     this.position = new Point2d(x, y);
     this.size = new Size2d(w, h);
-    this.speed = speed;
+    this.speed = {
+      x: speed,
+      y: speed,
+    };
   }
 
   public updatePosition(): void {
-    this.position.x += this.speed;
-    this.position.y += this.speed;
+    this.position.x += this.speed.x;
+    this.position.y += this.speed.y;
 
     this.$htmlElement.css({
       left: this.position.x,
       top: this.position.y,
     });
-  }
-
-  public getSpeed(): number {
-    return this.speed;
-  }
-
-  public setSpeed(speed: number): void {
-    this.speed = speed;
   }
 
   public updatePositionX(x: number): void {

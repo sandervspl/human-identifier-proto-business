@@ -7,6 +7,7 @@ import Gate from './Gate';
 import QueueSpot from './QueueSpot';
 import App from './app';
 import PersonPopup from './PersonPopup';
+import VectorMath from './utils/VectorMath';
 
 class Person extends GameObject {
   private app: App;
@@ -86,31 +87,25 @@ class Person extends GameObject {
     }
 
     if (!this.assignedGate.getIsAvailable()) {
-      console.log(`Person: ${this.id} - while walking my gate closed. I need new gate.`);
+      // console.log(`Person: ${this.id} - while walking my gate closed. I need new gate.`);
       this.assignNewGate();
     }
-
-    const { x } = this.position;
-    const { y } = this.position;
 
     const { x: queueX } = this.assignedQueueSpot.getMiddlePoint();
     const { y: queueY } = this.assignedQueueSpot.getMiddlePoint();
 
-    if (x !== queueX) {
-      if (x < queueX) {
-        this.updatePositionX(this.position.x += this.getSpeed());
-      } else if (x > queueX) {
-        this.updatePositionX(this.position.x -= this.getSpeed());
-      }
-    }
+    let queueVec = VectorMath.vec_sub(this.assignedQueueSpot.position, this.position);
+    const dist = VectorMath.vec_mag(queueVec);
+    queueVec = VectorMath.vec_add(queueVec, VectorMath.vec_mul(this.assignedQueueSpot.speed, dist / 2));
+    const trajectory = VectorMath.vec_mul(VectorMath.vec_normal(queueVec), 2);
 
-    if (y !== queueY) {
-      if (y < queueY) {
-        this.updatePositionY(this.position.y += this.getSpeed());
-      } else if (y > queueY) {
-        this.updatePositionY(this.position.y -= this.getSpeed());
-      }
-    }
+    this.speed.x = trajectory.x;
+    this.speed.y = trajectory.y;
+
+    this.setPosition(
+      this.position.x += this.speed.x,
+      this.position.y += this.speed.y,
+    );
 
     // if they are too close then just set them on location
     const diffX = Math.abs(this.position.x - queueX);
@@ -152,7 +147,7 @@ class Person extends GameObject {
       this.arrivedAtQueueSpot = true;
       this.isInQueue = true;
 
-      this.setSpeed(2);
+      this.speed.y = 2;
 
       this.startTimeCheckin = Date.now();
       this.assignedQueueSpot.setTaken();
@@ -190,9 +185,9 @@ class Person extends GameObject {
     // console.log(`gate ${this.assignedGate.getId() + 1} queue: ${this.assignedGate.getQueueNum()}`);
 
     if (this.assignedGate.getQueueNum() >= 10) {
-      console.log(`gate ${this.assignedGate.getId()} has queue longer than 10`);
+      // console.log(`gate ${this.assignedGate.getId()} has queue longer than 10`);
       if (!this.isInQueue) {
-        console.log(`Person ${this.id} needs a new gate`);
+        // console.log(`Person ${this.id} needs a new gate`);
         this.assignNewGate();
       }
     }
@@ -209,7 +204,7 @@ class Person extends GameObject {
     if (this.waitedTime === 0) {
       this.waitedTime = Date.now() - this.startedWaiting;
       this.assignedGate.avgWaitTimes.push(this.waitedTime);
-      console.log(`waited time: ${this.waitedTime}`);
+      // console.log(`waited time: ${this.waitedTime}`);
     }
 
     const curTime = Date.now();
@@ -227,7 +222,7 @@ class Person extends GameObject {
   }
 
   private walkThroughGate(): void {
-    this.updatePositionY(this.position.y -= this.getSpeed());
+    this.updatePositionY(this.position.y -= this.speed.y);
 
     if (this.position.y < this.assignedQueueSpot.getMiddlePoint().y - 20) {
       this.assignedQueueSpot.gate.totalPeopleCheckedIn += 1;
