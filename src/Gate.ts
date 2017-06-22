@@ -2,6 +2,7 @@
 import GameObject from './GameObject';
 import QueueSpot from './QueueSpot';
 import AvailableLight from './AvailableLight';
+import GatePopup from './GatePopup';
 
 // assets
 const gateImgs = [
@@ -19,6 +20,14 @@ class Gate extends GameObject {
   private queue: QueueSpot[] = [];
   private queueNum: number;
   private availableLight: AvailableLight;
+  private popup: GatePopup;
+
+  // data
+  public startTimeDataFarming: number = Date.now();
+  public avgPeoplePerMinute: number = 0;
+  public avgCheckinTime: number = 0;
+  public avgWaitTime: number = 0;
+  public totalPeopleCheckedIn: number = 0;
 
   constructor(id: number, available: boolean) {
     super(0, 0, 0, 0, 0);
@@ -26,6 +35,7 @@ class Gate extends GameObject {
     this.id = id;
     this.popularity = 10;
     this.queueNum = 0;
+    this.popup = new GatePopup(this);
 
     this.createElement('gate-sign');
     this.draw();
@@ -152,8 +162,14 @@ class Gate extends GameObject {
     const person = this.queue[0].occupant;
 
     if (person) {
-      person.popup.show();
+      person.popup.show('Currently checking in');
     }
+
+    // set data
+    this.avgPeoplePerMinute = this.totalPeopleCheckedIn / ((Date.now() - this.startTimeDataFarming) / 60000);
+    this.avgPeoplePerMinute = Math.floor(this.avgPeoplePerMinute);
+
+    this.popup.show();
   }
 
   private handleMouseLeave = (): void => {
@@ -163,6 +179,8 @@ class Gate extends GameObject {
     if (person) {
       person.popup.hide();
     }
+
+    this.popup.hide();
   }
 }
 

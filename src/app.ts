@@ -148,7 +148,7 @@ class App {
     const curTime = Date.now();
 
     if (curTime - this.prevSpawnTime > this.diffTimeSpawn) {
-      this.generatePeople(random.integer(1, 3));
+      this.generatePeople(random.integer(1, 5));
 
       this.diffTimeSpawn = random.integer(2000, 7000);
       this.prevSpawnTime = curTime;

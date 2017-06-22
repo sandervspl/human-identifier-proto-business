@@ -7,7 +7,7 @@ import Person from './Person';
 class QueueSpot extends GameObject {
   private id: number;
   private isTaken: boolean;
-  private gate: Gate;
+  public gate: Gate;
   public occupant: Person;
 
   constructor(id: number, x: number, y: number, gate: Gate) {

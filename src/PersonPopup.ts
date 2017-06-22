@@ -8,10 +8,10 @@ class PersonPopup {
 
   constructor(identity: IPersonIdentity) {
     this.identity = identity;
-    this.create();
   }
 
-  public show(): void {
+  public show(title?: string): void {
+    this.create(title);
     $('body').append(this.$htmlElement);
   }
 
@@ -19,14 +19,21 @@ class PersonPopup {
     this.$htmlElement.remove();
   }
 
-  private create(): void {
+  private create(title: string): void {
     this.$htmlElement = $(`<div class="person-mouseover"></div>`);
+
+    if (title) {
+      const $title = $(`<h3 class="person-mouseover__title">${title}</h3>`);
+      this.$htmlElement.append($title);
+    }
+
+    const $container = $(`<div class="person-mouseover__container"></div>`);
 
     const $photo = $(`<div class="person-mouseover__photo"></div>`);
     $photo.css('backgroundImage', `url(${this.identity.picture})`);
-    this.$htmlElement.append($photo);
+    $container.append($photo);
 
-    const $container = $(`<div class="person-mouseover__data"></div>`);
+    const $dataContainer = $(`<div class="person-mouseover__data"></div>`);
     const $list = $('<ul></ul>');
 
     const $name = this.createListElement('Name', this.identity.firstName, this.identity.lastName);
@@ -44,7 +51,8 @@ class PersonPopup {
     const $nat = this.createListElement('nationality', this.identity.nationality);
     $list.append($nat);
 
-    $container.append($list);
+    $dataContainer.append($list);
+    $container.append($dataContainer);
     this.$htmlElement.append($container);
   }
 

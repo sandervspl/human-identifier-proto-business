@@ -219,7 +219,9 @@ class Person extends GameObject {
     this.updatePositionY(this.position.y -= this.getSpeed());
 
     if (this.position.y < this.assignedQueueSpot.getMiddlePoint().y - 20) {
+      this.assignedQueueSpot.gate.totalPeopleCheckedIn += 1;
       this.isFinished = true;
+
       this.destructor();
     }
   }
