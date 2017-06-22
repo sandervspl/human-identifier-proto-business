@@ -2,6 +2,11 @@
   margin 0
   padding 0
   box-sizing border-box
+  font-family Helvetica, Arial, sans-serif
+
+ul li
+  list-style none
+  padding 5px 0
 
 #loader
   display none
@@ -62,3 +67,31 @@
 
     &.available
       background-color green
+
+.person-mouseover
+  display flex
+  flex-direction row
+  position fixed
+  top 10px
+  right 10px
+  z-index 100
+  padding 10px
+  border 3px solid #000
+  border-radius 5px
+  background #fff
+
+.person-mouseover__photo
+  display flex
+  width 50px
+  height 50px
+  background-repeat no-repeat
+  background-size cover
+
+.person-mouseover__data
+  display flex
+  margin-left 10px
+
+.person-mouseover__data-prop
+  display inline-block
+  width 100px
+  font-weight bold

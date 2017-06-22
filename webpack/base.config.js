@@ -31,7 +31,7 @@ module.exports = {
         enforce: 'pre',
         loader: 'tslint-loader',
         options: {
-          emitErrors: false,
+          emitErrors: true,
           typeCheck: true,
         }
       },

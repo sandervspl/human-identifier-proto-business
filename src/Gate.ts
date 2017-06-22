@@ -44,6 +44,8 @@ class Gate extends GameObject {
     if (this.id === 1) {
       this.setAvailableStatus(true);
     }
+
+    this.addEventHandlers();
   }
 
   public getId(): number {
@@ -134,6 +136,23 @@ class Gate extends GameObject {
 
   private draw(): void {
     this.$htmlElement.css('backgroundImage', `url(${gateImgs[this.id]})`);
+  }
+
+  private addEventHandlers(): void {
+    this.$htmlElement.on('mouseenter', this.handleMouseEnter);
+    this.$htmlElement.on('mouseleave', this.handleMouseLeave);
+  }
+
+  private handleMouseEnter = (): void => {
+    // this.$htmlElement.addClass('selected');
+    const person = this.queue[0].occupant;
+    person.popup.show();
+  }
+
+  private handleMouseLeave = (): void => {
+    // this.$htmlElement.removeClass('selected');
+    const person = this.queue[0].occupant;
+    person.popup.hide();
   }
 }
 

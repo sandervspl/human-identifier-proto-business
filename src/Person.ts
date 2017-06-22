@@ -1,5 +1,4 @@
 // dependencies
-import $ from 'jquery';
 import randomColor from 'randomcolor';
 const random = require('random-js')();
 import IPersonIdentity from './interfaces/IPersonIdentity';
@@ -7,20 +6,19 @@ import GameObject from './GameObject';
 import Gate from './Gate';
 import QueueSpot from './QueueSpot';
 import App from './app';
-// import PersonPopup from './PersonPopup';
+import PersonPopup from './PersonPopup';
 
 class Person extends GameObject {
   private app: App;
   private id: number;
   private identity: IPersonIdentity;
-  private $mouseOverElement: JQuery;
   private assignedGate: Gate;
   private assignedQueueSpot: QueueSpot;
   private arrivedAtQueueSpot: boolean;
   private checkinTime: number;
   private startTimeCheckin: number;
   private hasCheckedIn: boolean;
-  // private popup: PersonPopup;
+  public popup: PersonPopup;
   public isFinished: boolean;
   public isInQueue: boolean;
 
@@ -46,14 +44,15 @@ class Person extends GameObject {
     this.hasCheckedIn = false;
     this.isFinished = false;
     this.isInQueue = false;
+    this.popup = new PersonPopup(this.identity);
 
     this.createElement('person');
-    this.createMouseOverElement();
     this.draw();
 
     this.addEventHandlers();
 
-    this.assignedQueueSpot = this.assignedGate.getQueue()[0];
+    // this.assignedQueueSpot = this.assignedGate.getQueue()[0];
+    this.assignQueueSpot();
 
     // console.log(`I am assigned to gate ${this.assignedGate.getId()} queue ${this.assignedQueueSpot.getId()}`);
   }
@@ -124,6 +123,11 @@ class Person extends GameObject {
     }
   }
 
+  private destructor(): void {
+    this.popup.hide();
+    this.$htmlElement.remove();
+  }
+
   private checkIfArrived(): void {
     const { x } = this.position;
     const { y } = this.position;
@@ -147,6 +151,10 @@ class Person extends GameObject {
 
       this.startTimeCheckin = Date.now();
       this.assignedQueueSpot.setTaken();
+
+      if (this.assignedQueueSpot.getId() === 0) {
+        this.assignedQueueSpot.occupant = this;
+      }
     }
   }
 
@@ -156,17 +164,13 @@ class Person extends GameObject {
   }
 
   private handleMouseEnter = (): void => {
-    $('body').append(this.$mouseOverElement);
     this.$htmlElement.addClass('selected');
+    this.popup.show();
   }
 
   private handleMouseLeave = (): void => {
-    $(`[data-person-id=${this.id}]`).remove();
     this.$htmlElement.removeClass('selected');
-  }
-
-  private createMouseOverElement(): void {
-    // this.popup = new PersonPopup();
+    this.popup.hide();
   }
 
   private draw(): void {
@@ -189,6 +193,7 @@ class Person extends GameObject {
     }
 
     this.assignedQueueSpot = this.assignedGate.getQueue().find(spot => !spot.hasBeenTaken());
+    this.assignedQueueSpot.occupant = this;
 
     // console.log(`gate: ${this.assignedGate.getId()} queue: ${this.assignedQueueSpot.getId()}`);
   }
@@ -215,7 +220,7 @@ class Person extends GameObject {
 
     if (this.position.y < this.assignedQueueSpot.getMiddlePoint().y - 20) {
       this.isFinished = true;
-      this.$htmlElement.remove();
+      this.destructor();
     }
   }
 

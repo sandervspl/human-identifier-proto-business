@@ -2,11 +2,13 @@
 import GameObject from './GameObject';
 import Gate from './Gate';
 import IPoint2d from './interfaces/IPoint2d';
+import Person from './Person';
 
 class QueueSpot extends GameObject {
   private id: number;
   private isTaken: boolean;
   private gate: Gate;
+  public occupant: Person;
 
   constructor(id: number, x: number, y: number, gate: Gate) {
     super(x, y, 20, 20, 0);
@@ -14,6 +16,7 @@ class QueueSpot extends GameObject {
     this.id = id;
     this.isTaken = false;
     this.gate = gate;
+    this.occupant = null;
 
     this.createElement('queue-spot');
     // this.$htmlElement.attr({'data-gate-id': this.gate.getId(), 'data-queue-id': this.id });
