@@ -86,6 +86,10 @@ class Gate extends GameObject {
   public setAvailableStatus(available: boolean): void {
     this.isAvailable = available;
     this.availableLight.draw();
+
+    if (available === false) {
+      this.queue[0].occupant = null;
+    }
   }
 
   public getIsAvailable(): boolean {
@@ -146,13 +150,19 @@ class Gate extends GameObject {
   private handleMouseEnter = (): void => {
     // this.$htmlElement.addClass('selected');
     const person = this.queue[0].occupant;
-    person.popup.show();
+
+    if (person) {
+      person.popup.show();
+    }
   }
 
   private handleMouseLeave = (): void => {
     // this.$htmlElement.removeClass('selected');
     const person = this.queue[0].occupant;
-    person.popup.hide();
+
+    if (person) {
+      person.popup.hide();
+    }
   }
 }
 

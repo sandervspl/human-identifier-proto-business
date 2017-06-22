@@ -15,13 +15,15 @@ class IdentitiesFetcher {
     let result: any = await fetch('https://randomuser.me/api/?results=100');
     result = await result.json();
 
+    // console.log(result);
+
     const personalities = result.results.map(identity => ({
       firstName: identity.name.first,
       lastName: identity.name.last,
       gender: identity.gender,
       dateOfBirth: identity.dob.substring(0, identity.dob.indexOf(' ')),
       passportId: identity.login.salt,
-      picture: identity.picture.thumbnail,
+      picture: identity.picture.medium,
       nationality: identity.nat,
     }));
 
