@@ -124,6 +124,8 @@ class Person extends GameObject {
   }
 
   private destructor(): void {
+    this.assignedGate.avgCheckinTimes.push(this.checkinTime);
+
     this.popup.hide();
     this.$htmlElement.remove();
   }

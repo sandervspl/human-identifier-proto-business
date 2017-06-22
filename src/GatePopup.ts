@@ -33,10 +33,16 @@ class GatePopup {
     $list.append($totalCheckin);
 
     const $avgPplPerMin = this.createListElement(
-      'Average checkins per minute',
+      'Average check-ins per minute',
       this.gate.avgPeoplePerMinute.toString()
     );
     $list.append($avgPplPerMin);
+
+    const $avgCheckinTime = this.createListElement(
+      'Average check-in time',
+      `${this.gate.avgCheckinTimeAmount.toString()} m`
+    );
+    $list.append($avgCheckinTime);
 
     $container.append($list);
     this.$htmlElement.append($container);

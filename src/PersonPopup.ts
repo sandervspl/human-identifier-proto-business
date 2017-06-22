@@ -16,7 +16,9 @@ class PersonPopup {
   }
 
   public hide(): void {
-    this.$htmlElement.remove();
+    if (this.$htmlElement) {
+      this.$htmlElement.remove();
+    }
   }
 
   private create(title: string): void {

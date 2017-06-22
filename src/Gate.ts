@@ -25,7 +25,8 @@ class Gate extends GameObject {
   // data
   public startTimeDataFarming: number = Date.now();
   public avgPeoplePerMinute: number = 0;
-  public avgCheckinTime: number = 0;
+  public avgCheckinTimes: number[] = [];
+  public avgCheckinTimeAmount: number = 0;
   public avgWaitTime: number = 0;
   public totalPeopleCheckedIn: number = 0;
 
@@ -166,8 +167,17 @@ class Gate extends GameObject {
     }
 
     // set data
+    // avg people per minute
     this.avgPeoplePerMinute = this.totalPeopleCheckedIn / ((Date.now() - this.startTimeDataFarming) / 60000);
     this.avgPeoplePerMinute = Math.floor(this.avgPeoplePerMinute);
+
+    // avg checkin time
+    if (this.avgCheckinTimes.length === 0) {
+      this.avgCheckinTimeAmount = 0;
+    } else {
+      const sum = this.avgCheckinTimes.reduce((previous, current) => current += previous);
+      this.avgCheckinTimeAmount = Math.round((sum / this.avgCheckinTimes.length) / 1000);
+    }
 
     this.popup.show();
   }
